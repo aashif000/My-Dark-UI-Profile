@@ -1193,28 +1193,20 @@
           </figure>
         </section>
 
-        <section class="contact-form">
-
-          <h3 class="h3 form-title">Contact Form</h3>
-
-          <form action="#" class="form" data-form>
-
-            <div class="input-wrapper">
-              <input type="text" name="fullname" class="form-input" placeholder="Full name" required data-form-input>
-
-              <input type="email" name="email" class="form-input" placeholder="Email address" required data-form-input>
-            </div>
-
-            <textarea name="message" class="form-input" placeholder="Your Message" required data-form-input></textarea>
-
-            <button class="form-btn" type="submit" disabled data-form-btn>
-              <ion-icon name="paper-plane"></ion-icon>
-              <span>Send Message</span>
-            </button>
-
-          </form>
-
-        </section>
+<section class="contact-form">
+    <h3 class="h3 form-title">Contact Form</h3>
+    <form id="contactForm" class="form" data-form>
+        <div class="input-wrapper">
+            <input type="text" name="fullname" class="form-input" placeholder="Full name" required data-form-input>
+            <input type="email" name="email" class="form-input" placeholder="Email address" required data-form-input>
+        </div>
+        <textarea name="message" class="form-input" placeholder="Your Message" required data-form-input></textarea>
+        <button id="submitButton" class="form-btn" type="submit" disabled data-form-btn>
+            <ion-icon name="paper-plane"></ion-icon>
+            <span>Send Message</span>
+        </button>
+    </form>
+</section>
 
       </article>
 
@@ -1229,14 +1221,62 @@
 
   <!--
     - custom js link
-  -->
-  <script src="./assets/js/script.js"></script>
+
+  <script src="./assets/js/script.js"></script>    -->
 
   <!--
     - ionicon link
   -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Include ionicons library -->
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
+<!-- Include JavaScript at the bottom of the body -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('#contactForm');
+        const submitButton = document.querySelector('#submitButton');
+        const inputs = form.querySelectorAll('[data-form-input]');
+
+        // Enable submit button if all fields are filled
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                let allFilled = true;
+                inputs.forEach(input => {
+                    if (!input.value) {
+                        allFilled = false;
+                    }
+                });
+                submitButton.disabled = !allFilled;
+            });
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            fetch('http://your-server-endpoint', {  // Replace with your actual endpoint
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                alert('Form submitted successfully!');
+                form.reset();
+                submitButton.disabled = true;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Form submission failed: ' + error.message);
+            });
+        });
+    });
+</script>
 
 </body>
 
